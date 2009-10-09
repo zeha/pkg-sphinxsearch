@@ -2,7 +2,8 @@
 
 getent passwd sphinxsearch >/dev/null
 if [[ $? != 0 ]]; then
-	adduser --system --disabled-login --no-create-home --home /var/run/sphinxsearch --gecos "Sphinx fulltext search service" --group sphinxsearch
+	adduser --system --disabled-login --home /var/run/sphinxsearch --gecos "Sphinx fulltext search service" --group sphinxsearch
 fi
 
+#DEBHELPER#
 

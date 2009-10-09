@@ -1,5 +1,10 @@
 example.sql
-doc/*
+doc/internals-coding-standard.txt
+doc/internals-index-format.txt
+doc/sphinx.css
+doc/sphinx.html
+doc/sphinx.txt
+doc/sphinx.xml
 contrib
 sphinx.conf.dist
 sphinx-min.conf.dist

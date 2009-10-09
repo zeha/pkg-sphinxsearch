@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 ### BEGIN INIT INFO
 # Provides:          sphinxsearch
 # Required-Start:    $remote_fs
@@ -19,7 +19,7 @@ NAME=sphinxsearch
 SCRIPTNAME=/etc/init.d/$NAME
 SEARCHD_CONFIG=/etc/sphinxsearch/sphinx.conf
 SEARCHD_NAME=searchd
-SEARCHD_DAEMON=/usr/sbin/searchd
+SEARCHD_DAEMON=/usr/bin/searchd
 SEARCHD_DAEMON_ARGS=""
 SEARCHD_PIDFILE=/var/run/sphinxsearch/searchd.pid
 
@@ -41,13 +41,22 @@ SEARCHD_PIDFILE=/var/run/sphinxsearch/searchd.pid
 #
 do_start()
 {
+	# Create piddir, as this may be on a tmpfs
+	SEARCHD_PIDDIR=`dirname $SEARCHD_PIDFILE`
+	if [ ! -d $SEARCHD_PIDDIR ]; then
+		mkdir $SEARCHD_PIDDIR
+		chown sphinxsearch $SEARCHD_PIDDIR
+	fi
+
 	# Return
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-	start-stop-daemon --start --quiet --pidfile $SEARCHD_PIDFILE --exec $SEARCHD_DAEMON --test > /dev/null \
+	start-stop-daemon --start --quiet --pidfile $SEARCHD_PIDFILE \
+		--exec $SEARCHD_DAEMON --user sphinxsearch --test > /dev/null \
 		|| return 1
-	start-stop-daemon --start --quiet --pidfile $SEARCHD_PIDFILE --exec $SEARCHD_DAEMON -- \
+	start-stop-daemon --start --quiet --pidfile $SEARCHD_PIDFILE \
+		--exec $SEARCHD_DAEMON --chuid sphinxsearch \
 		$SEARCHD_DAEMON_ARGS \
 		|| return 2
 	# Add code here, if necessary, that waits for the process to be ready
@@ -65,7 +74,8 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $SEARCHD_PIDFILE --name $SEARCHD_NAME
+	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $SEARCHD_PIDFILE \
+		--user sphinxsearch --name $SEARCHD_NAME
 	RETVAL="$?"
 	[ "$RETVAL" = 2 ] && return 2
 	# Wait for children to finish too if this is a daemon that forks
@@ -74,7 +84,8 @@ do_stop()
 	# that waits for the process to drop all resources that could be
 	# needed by services started subsequently.  A last resort is to
 	# sleep for some time.
-	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
+	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --user sphinxsearch \
+		--exec $DAEMON
 	[ "$?" = 2 ] && return 2
 	# Many daemons don't delete their pidfiles when they exit.
 	rm -f $PIDFILE
@@ -85,12 +96,8 @@ do_stop()
 # Function that sends a SIGHUP to the daemon/service
 #
 do_reload() {
-	#
-	# If the daemon can reload its configuration without
-	# restarting (for example, when it is sent a SIGHUP),
-	# then implement that here.
-	#
-	start-stop-daemon --stop --signal 1 --quiet --pidfile $SEARCHD_PIDFILE --name $SEARCHD_NAME
+	start-stop-daemon --stop --signal 1 --quiet --pidfile $SEARCHD_PIDFILE \
+		--user sphinxsearch --name $SEARCHD_NAME
 	return 0
 }
 
@@ -112,19 +119,11 @@ case "$1" in
 	esac
 	;;
   reload|force-reload)
-	#
-	# If do_reload() is not implemented then leave this commented out
-	# and leave 'force-reload' as an alias for 'restart'.
-	#
 	log_daemon_msg "Reloading $DESC" "$SEARCHD_NAME"
 	do_reload
 	log_end_msg $?
 	;;
   restart)
-	#
-	# If the "reload" option is implemented then remove the
-	# 'force-reload' alias
-	#
 	log_daemon_msg "Restarting $DESC" "$SEARCHD_NAME"
 	do_stop
 	case "$?" in
@@ -143,8 +142,7 @@ case "$1" in
 	esac
 	;;
   *)
-	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
-	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
 	exit 3
 	;;
 esac
