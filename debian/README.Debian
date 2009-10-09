@@ -1,0 +1,7 @@
+Sphinxsearch
+------------
+
+searchd will start automatically, but the default configuration does not supply
+any indexes. Therefore, searchd will not continue running. You have to edit
+/etc/sphinxsearch/sphinx.conf to get any meaningful mode of operation.
+

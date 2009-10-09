@@ -5,5 +5,7 @@ if [[ $? != 0 ]]; then
 	adduser --system --disabled-login --home /var/run/sphinxsearch --gecos "Sphinx fulltext search service" --group sphinxsearch
 fi
 
+chown sphinxsearch: /var/log/sphinxsearch /var/lib/sphinxsearch
+
 #DEBHELPER#
 

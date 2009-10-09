@@ -7,7 +7,7 @@
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
 
 include /usr/share/dpatch/dpatch.make
 
@@ -28,7 +28,7 @@ else
 endif
 
 configure: patch configure-stamp
-configure-stamp:
+configure-stamp: patch
 	dh_testdir
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""
 	cp -f /usr/share/misc/config.sub config.sub
@@ -75,7 +75,8 @@ install: build
 	# clean configuration files
 	rm $(DEBTMPDIR)/etc/sphinxsearch/example.sql
 	rm $(DEBTMPDIR)/etc/sphinxsearch/sphinx-min.conf.dist
-	mv $(DEBTMPDIR)/etc/sphinxsearch/sphinx.conf.dist $(DEBTMPDIR)/etc/sphinxsearch/sphinx.conf
+	rm $(DEBTMPDIR)/etc/sphinxsearch/sphinx.conf.dist
+	install -m0600 debian/sphinx.conf $(DEBTMPDIR)/etc/sphinxsearch/sphinx.conf
 
 	# apis
 	cd api/libsphinxclient && $(MAKE) DESTDIR=$(DEBTMPDIR) install
