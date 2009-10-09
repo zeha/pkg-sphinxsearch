@@ -120,6 +120,7 @@ binary-arch: build install
 	dh_install -Npython-sphinxapi -Nlibsphinx-ruby -a --list-missing --sourcedir=debian/tmp
 	dh_installdirs -Npython-sphinxapi -Nlibsphinx-ruby
 	dh_installchangelogs -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_installcron -a -Npython-sphinxapi -Nlibsphinx-ruby
 	dh_installdocs -a -Npython-sphinxapi -Nlibsphinx-ruby
 	dh_installexamples -Npython-sphinxapi -Nlibsphinx-ruby
 	dh_installinit -Npython-sphinxapi -Nlibsphinx-ruby
