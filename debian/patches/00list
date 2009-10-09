@@ -1,2 +1,1 @@
-02_sphinx.conf.dpatch
-03_src__Makefile_am.dpatch
+01_sphinx.conf.dpatch
