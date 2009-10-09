@@ -1,12 +1,11 @@
 Source: sphinxsearch
 Section: misc
 Priority: optional
-Maintainer: Monty Taylor <monty@inaugust.com>
-Uploaders: David Leal <david@davidleal.com>
-Build-Depends: debhelper (>= 6.0.7), autotools-dev, gawk, libmysqlclient15-dev, dpatch, libpq-dev, autoconf, libtool, automake, python-support (>= 0.90), graphviz
+Maintainer: Christian Hofstädtler <hofstaedtler@inqnet.at>
+Build-Depends: debhelper (>= 7.0.15), autotools-dev, gawk, libmysqlclient15-dev, dpatch, libpq-dev, autoconf, libtool, automake, python-support (>= 0.90), graphviz
 Vcs-Bzr: http://bazaar.launchpad.net/~pkg-sphinx/pkg-sphinx/trunk
 Vcs-Browser: http://bazaar.launchpad.net/~pkg-sphinx/pkg-sphinx/trunk/files
-Standards-Version: 3.8.1
+Standards-Version: 3.8.2
 Homepage: http://www.sphinxsearch.com/
 
 Package: sphinxsearch
@@ -23,7 +22,7 @@ Description: Fast standalone full-text SQL search engine
  .
  Sphinx is an acronym which is officially decoded as SQL Phrase Index. 
 
-Package: libsphinxclient0
+Package: libsphinxclient-0.0.1
 Depends: ${shlibs:Depends}
 Architecture: any
 Description: Fast standalone full-text SQL search engine - Client library
@@ -42,7 +41,7 @@ Description: Fast standalone full-text SQL search engine - Client library
 Package: libsphinxclient-dev
 Architecture: any
 Section: libdevel
-Depends: libsphinxclient0 (= ${binary:Version})
+Depends: libsphinxclient-0.0.1 (= ${binary:Version})
 Description: Fast standalone full-text SQL search engine - Client library
  Sphinx is a standalone full text search engine, meant to provide fast, 
  size-efficient and relevant fulltext search functions to other applications. 
@@ -75,7 +74,7 @@ Description: Fast standalone full-text SQL search engine - Client library
 
 Package: libsphinx-ruby
 Architecture: all
-Section: libs
+Section: ruby
 Depends: libruby, ruby (>=1.8.7)
 Description: Fast standalone full-text SQL search engine - Client library
  Sphinx is a standalone full text search engine, meant to provide fast, 

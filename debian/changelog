@@ -1,10 +1,10 @@
-sphinxsearch (0.9.9-0~rc2+inq1+1) lenny-inqnet; urgency=low
+sphinxsearch (0.9.9-0~rc2+inq1+1) UNRELEASED; urgency=low
 
-  * Build for lenny-inqnet.
   * Update to 0.9.9-rc2.
-  * Add libsphinxclient.
-  * Add python-sphinxapi.
-  * Add statically linked libstemmer_c
+  * Add package for libsphinxclient.
+  * Add package for python-sphinxapi.
+  * Add package for libsphinx-ruby.
+  * Add statically linked libstemmer_c (for now).
 
  -- Christian Hofstädtler <hofstaedtler@inqnet.at>  Thu, 10 Sep 2009 12:50:59 +0000
 
