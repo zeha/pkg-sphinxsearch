@@ -1,0 +1,5 @@
+example.sql
+doc/*
+contrib
+sphinx.conf.dist
+sphinx-min.conf.dist

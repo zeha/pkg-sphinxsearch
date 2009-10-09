@@ -1,0 +1,9 @@
+# Configuration file for searchd
+SEARCHD_CONFIG=/etc/sphinxsearch/sphinx.conf
+
+# Extra command line args
+SEARCHD_DAEMON_ARGS=""
+
+# PID file
+SEARCHD_PIDFILE=/var/run/sphinxsearch/searchd.pid
+

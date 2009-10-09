@@ -1,0 +1,3 @@
+usr/bin
+var/log/sphinxsearch
+var/lib/sphinxsearch/data

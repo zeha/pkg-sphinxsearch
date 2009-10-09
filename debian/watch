@@ -1,0 +1,3 @@
+version=3
+http://sphinxsearch.com/downloads.html \
+/downloads/sphinx-(.*).tar.gz

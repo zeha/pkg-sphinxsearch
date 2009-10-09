@@ -1,0 +1,139 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+include /usr/share/dpatch/dpatch.make
+
+DEBTMPDIR=$(CURDIR)/debian/tmp
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+configure: patch configure-stamp
+configure-stamp:
+	dh_testdir
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+	cp -f /usr/share/misc/config.sub api/libsphinxclient/config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+	cp -f /usr/share/misc/config.guess api/libsphinxclient/config.guess
+endif
+	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --localstatedir=/var/lib/sphinxsearch --sysconfdir=/etc/sphinxsearch --with-mysql --with-pgsql CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs" --with-libstemmer
+
+	cd api/libsphinxclient && ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --localstatedir=/var/lib/sphinxsearch --sysconfdir=/etc/sphinxsearch CFLAGS="$(CFLAGS)"
+
+	touch $@
+
+build: configure-stamp build-stamp
+build-stamp:  configure-stamp
+	dh_testdir
+	$(MAKE)
+	touch $@
+
+clean: clean-patched unpatch
+	rm -rf debian/patched
+clean-patched: 
+	dh_testdir
+	dh_testroot
+	rm -f configure-stamp build-stamp
+
+	[ ! -f Makefile ] || $(MAKE) distclean
+	[ ! -f api/libsphinxclient/Makefile ] || $(MAKE) -C api/libsphinxclient distclean
+	rm -f config.guess config.sub
+	rm -f api/libsphinxclient/config.guess api/libsphinxclient/config.sub
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+	# main package
+	$(MAKE) DESTDIR=$(DEBTMPDIR) install
+
+	# clean configuration files
+	rm $(DEBTMPDIR)/etc/sphinxsearch/example.sql
+	rm $(DEBTMPDIR)/etc/sphinxsearch/sphinx-min.conf.dist
+	mv $(DEBTMPDIR)/etc/sphinxsearch/sphinx.conf.dist $(DEBTMPDIR)/etc/sphinxsearch/sphinx.conf
+
+	# apis
+	cd api/libsphinxclient && $(MAKE) DESTDIR=$(DEBTMPDIR) install
+	install -d $(DEBTMPDIR)/usr/lib/python2.5/site-packages
+	install -m0644 api/sphinxapi.py $(DEBTMPDIR)/usr/lib/python2.5/site-packages
+	install -d $(DEBTMPDIR)/usr/lib/ruby/vendor_ruby
+	install -d $(DEBTMPDIR)/usr/lib/ruby/vendor_ruby/sphinx
+	install -m0644 api/ruby/lib/sphinx.rb $(DEBTMPDIR)/usr/lib/ruby/vendor_ruby/
+	install -m0644 api/ruby/lib/sphinx/client.rb $(DEBTMPDIR)/usr/lib/ruby/vendor_ruby/sphinx/
+	install -m0644 api/ruby/lib/sphinx/request.rb $(DEBTMPDIR)/usr/lib/ruby/vendor_ruby/sphinx/
+	install -m0644 api/ruby/lib/sphinx/response.rb $(DEBTMPDIR)/usr/lib/ruby/vendor_ruby/sphinx/
+	install -d $(DEBTMPDIR)/usr/share/doc/libsphinx-ruby
+	cd api/ruby && rdoc --all --inline-source --diagram --fileboxes --line-numbers --fmt=html -o $(DEBTMPDIR)/usr/share/doc/libsphinx-ruby/rdoc
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	#dh_rdoc -plibsphinx-ruby api/ruby
+	dh_install -ppython-sphinxapi -plibsphinx-ruby -a --list-missing --sourcedir=debian/tmp
+	dh_installdirs -ppython-sphinxapi -plibsphinx-ruby
+	dh_installchangelogs -ppython-sphinxapi -plibsphinx-ruby
+	dh_installdocs -ppython-sphinxapi -plibsphinx-ruby
+	dh_installexamples -ppython-sphinxapi -plibsphinx-ruby
+	dh_installman -ppython-sphinxapi -plibsphinx-ruby
+	dh_pysupport -ppython-sphinxapi -plibsphinx-ruby
+	dh_lintian -ppython-sphinxapi -plibsphinx-ruby
+	dh_compress -ppython-sphinxapi -plibsphinx-ruby
+	dh_fixperms -ppython-sphinxapi -plibsphinx-ruby
+	dh_makeshlibs -ppython-sphinxapi -plibsphinx-ruby
+	dh_installdeb -ppython-sphinxapi -plibsphinx-ruby
+	dh_shlibdeps -ppython-sphinxapi -plibsphinx-ruby
+	dh_gencontrol -ppython-sphinxapi -plibsphinx-ruby
+	dh_md5sums -ppython-sphinxapi -plibsphinx-ruby
+	dh_builddeb -ppython-sphinxapi -plibsphinx-ruby
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_install -Npython-sphinxapi -Nlibsphinx-ruby -a --list-missing --sourcedir=debian/tmp
+	dh_installdirs -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_installchangelogs -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_installdocs -a -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_installexamples -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_installinit -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_installman -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_link -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_strip -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_lintian -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_compress -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_fixperms -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_makeshlibs -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_shlibdeps -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_installdeb -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_gencontrol -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_md5sums -Npython-sphinxapi -Nlibsphinx-ruby
+	dh_builddeb -Npython-sphinxapi -Nlibsphinx-ruby
+
+binary: binary-indep binary-arch
+.PHONY: build clean clean-patched binary-indep binary-arch binary install patch unpatch

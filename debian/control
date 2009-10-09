@@ -1,0 +1,92 @@
+Source: sphinxsearch
+Section: misc
+Priority: optional
+Maintainer: Monty Taylor <monty@inaugust.com>
+Uploaders: David Leal <david@davidleal.com>
+Build-Depends: debhelper (>= 6.0.7), autotools-dev, gawk, libmysqlclient15-dev, dpatch, libpq-dev, autoconf, libtool, automake, python-support (>= 0.90), graphviz
+Vcs-Bzr: http://bazaar.launchpad.net/~pkg-sphinx/pkg-sphinx/trunk
+Vcs-Browser: http://bazaar.launchpad.net/~pkg-sphinx/pkg-sphinx/trunk/files
+Standards-Version: 3.8.1
+Homepage: http://www.sphinxsearch.com/
+
+Package: sphinxsearch
+Architecture: any
+Depends: ${shlibs:Depends}, libmysqlclient15off | libmysqlclient15
+Description: Fast standalone full-text SQL search engine
+ Sphinx is a standalone full text search engine, meant to provide fast, 
+ size-efficient and relevant fulltext search functions to other applications. 
+ Sphinx was specially designed to integrate well with SQL databases and 
+ scripting languages. Currently built-in data sources support fetching data 
+ either via direct connection to MySQL or PostgreSQL, or using XML pipe 
+ mechanism (a pipe to indexer in special XML-based format which Sphinx 
+ recognizes).
+ .
+ Sphinx is an acronym which is officially decoded as SQL Phrase Index. 
+
+Package: libsphinxclient0
+Depends: ${shlibs:Depends}
+Architecture: any
+Description: Fast standalone full-text SQL search engine - Client library
+ Sphinx is a standalone full text search engine, meant to provide fast, 
+ size-efficient and relevant fulltext search functions to other applications. 
+ Sphinx was specially designed to integrate well with SQL databases and 
+ scripting languages. Currently built-in data sources support fetching data 
+ either via direct connection to MySQL or PostgreSQL, or using XML pipe 
+ mechanism (a pipe to indexer in special XML-based format which Sphinx 
+ recognizes).
+ .
+ Sphinx is an acronym which is officially decoded as SQL Phrase Index.
+ .
+ This package contains the client library for C.
+
+Package: libsphinxclient-dev
+Architecture: any
+Section: libdevel
+Depends: libsphinxclient0 (= ${binary:Version})
+Description: Fast standalone full-text SQL search engine - Client library
+ Sphinx is a standalone full text search engine, meant to provide fast, 
+ size-efficient and relevant fulltext search functions to other applications. 
+ Sphinx was specially designed to integrate well with SQL databases and 
+ scripting languages. Currently built-in data sources support fetching data 
+ either via direct connection to MySQL or PostgreSQL, or using XML pipe 
+ mechanism (a pipe to indexer in special XML-based format which Sphinx 
+ recognizes).
+ .
+ Sphinx is an acronym which is officially decoded as SQL Phrase Index.
+ .
+ This package contains the client library for C development files.
+
+Package: python-sphinxapi
+Architecture: all
+Section: python
+Depends: ${python:Depends}
+Description: Fast standalone full-text SQL search engine - Client library
+ Sphinx is a standalone full text search engine, meant to provide fast, 
+ size-efficient and relevant fulltext search functions to other applications. 
+ Sphinx was specially designed to integrate well with SQL databases and 
+ scripting languages. Currently built-in data sources support fetching data 
+ either via direct connection to MySQL or PostgreSQL, or using XML pipe 
+ mechanism (a pipe to indexer in special XML-based format which Sphinx 
+ recognizes).
+ .
+ Sphinx is an acronym which is officially decoded as SQL Phrase Index.
+ .
+ This package contains the client library for Python.
+
+Package: libsphinx-ruby
+Architecture: all
+Section: libs
+Depends: libruby, ruby (>=1.8.7)
+Description: Fast standalone full-text SQL search engine - Client library
+ Sphinx is a standalone full text search engine, meant to provide fast, 
+ size-efficient and relevant fulltext search functions to other applications. 
+ Sphinx was specially designed to integrate well with SQL databases and 
+ scripting languages. Currently built-in data sources support fetching data 
+ either via direct connection to MySQL or PostgreSQL, or using XML pipe 
+ mechanism (a pipe to indexer in special XML-based format which Sphinx 
+ recognizes).
+ .
+ Sphinx is an acronym which is officially decoded as SQL Phrase Index.
+ .
+ This package contains the client library for Ruby.
+

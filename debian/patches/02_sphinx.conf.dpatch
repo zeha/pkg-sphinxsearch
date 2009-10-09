@@ -1,0 +1,79 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 02_sphinx.conf.dpatch by  <monty@inaugust.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Changed default locations to match debian locations.
+
+@DPATCH@
+diff -urNad trunk~/sphinx.conf.in trunk/sphinx.conf.in
+--- trunk~/sphinx.conf.in	2008-02-18 13:27:29.000000000 -0800
++++ trunk/sphinx.conf.in	2008-02-18 13:34:48.000000000 -0800
+@@ -287,7 +287,7 @@
+ 	# all the other elements are mandatory
+ 
+ 	# type				= xmlpipe
+-	# xmlpipe_command	= cat @CONFDIR@/test.xml
++	# xmlpipe_command	= cat @localstatedir@/test.xml
+ 
+ 	#####################################################################
+ 	## xmlpipe2 settings
+@@ -348,7 +348,7 @@
+ 
+ 
+ 	# type						= xmlpipe2
+-	# xmlpipe_command			= cat @CONFDIR@/test2.xml
++	# xmlpipe_command			= cat @localstatedir@/test2.xml
+ 	# xmlpipe_field				= subject
+ 	# xmlpipe_field				= content
+ 	# xmlpipe_attr_timestamp	= published
+@@ -400,7 +400,7 @@
+ 	# .spi contains wordlists
+ 	#
+ 	# MUST be defined
+-	path			= @CONFDIR@/data/test1
++	path			= @localstatedir@/test1
+ 
+ 	# docinfo (ie. per-document attribute values) storage strategy
+ 	# defines how docinfo will be stored
+@@ -781,7 +781,7 @@
+ # and may then be overridden in this index definition
+ index test1stemmed : test1
+ {
+-	path			= @CONFDIR@/data/test1stemmed
++	path			= @localstatedir@/test1stemmed
+ 	morphology		= stem_en
+ }
+ 
+@@ -882,7 +882,7 @@
+ 	# optional, default is to listen on all addresses,
+ 	# ie. address = 0.0.0.0
+ 	#
+-	# address				= 127.0.0.1
++	address				= 127.0.0.1
+ 	# address				= 192.168.0.1
+ 
+ 
+@@ -892,12 +892,12 @@
+ 
+ 	# log file
+ 	# searchd run info is logged here
+-	log					= @CONFDIR@/log/searchd.log
++	log					= /var/log/sphinxsearch/searchd.log
+ 
+ 
+ 	# query log file
+ 	# all the search queries are logged here
+-	query_log			= @CONFDIR@/log/query.log
++	query_log			= /var/log/sphinxsearch/query.log
+ 
+ 
+ 	# client read timeout, seconds
+@@ -912,7 +912,7 @@
+ 	# a file which will contain searchd process ID
+ 	# used for different external automation scripts
+ 	# MUST be present
+-	pid_file			= @CONFDIR@/log/searchd.pid
++	pid_file			= /var/run/sphinxsearch/searchd.pid
+ 
+ 
+ 	# maximum amount of matches this daemon would ever retrieve

@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 03src__Makefile_am.dpatch by  <monty@inaugust.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Removed -lz - it's unnecessary. Andrew will remove this in the next release.
+
+@DPATCH@
+diff -urNad trunk~/src/Makefile.am trunk/src/Makefile.am
+--- trunk~/src/Makefile.am	2008-02-18 12:36:30.000000000 -0800
++++ trunk/src/Makefile.am	2008-02-18 13:08:50.000000000 -0800
+@@ -24,7 +24,7 @@
+ endif
+ 
+ indexer_LDADD = libsphinx.a $(LIBSTEMMER_LIBS) $(MYSQL_LIBS) $(PGSQL_LIBS)
+-searchd_LDADD = libsphinx.a $(LIBSTEMMER_LIBS) $(MYSQL_LIBS) $(PGSQL_LIBS) -lz
++searchd_LDADD = libsphinx.a $(LIBSTEMMER_LIBS) $(MYSQL_LIBS) $(PGSQL_LIBS)
+ search_LDADD = libsphinx.a $(LIBSTEMMER_LIBS) $(MYSQL_LIBS) $(PGSQL_LIBS)
+ spelldump_LDADD = libsphinx.a $(LIBSTEMMER_LIBS) $(MYSQL_LIBS) $(PGSQL_LIBS)
+ 
