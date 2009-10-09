@@ -55,37 +55,55 @@ manpage.1: manpage.sgml
     &dhsection;
   </refmeta>
   <refnamediv>
-    <refname>searchd</refname>
+    <refname>indexer</refname>
 
-    <refpurpose>socket server handling search requests backed by Sphinx</refpurpose>
+    <refpurpose>fulltext index generator</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
-   <cmdsynopsis>
-      <command>searchd</command>
+    <cmdsynopsis>
+      <command>indexer</command>
       <arg><option>--config <replaceable>CONFIGFILE</replaceable></option></arg>
-      <arg><option>--cpustats</option></arg>
-      <arg><option>--iostats</option></arg>
-      <arg><option>--index <replaceable>INDEX</replaceable></option></arg>
-      <arg><option>--port <replaceable>PORT</replaceable></option></arg>
+      <arg><option>--rotate</option></arg>
+      <group>
+        <arg><option>--noprogress</option></arg>
+        <arg><option>--quiet</option></arg>
+      </group>
+      <group>
+        <arg><option>--all</option></arg>
+        <arg rep='repeat'><replaceable>INDEX</replaceable></arg>
+      </group>
     </cmdsynopsis>
     <cmdsynopsis>
-      <command>searchd</command>
-      <arg choice='req'>--status</arg>
+      <command>indexer</command>
+      <arg choice='req'>--buildstops <replaceable>OUTPUTFILE</replaceable> <replaceable>COUNT</replaceable></arg>
       <arg><option>--config <replaceable>CONFIGFILE</replaceable></option></arg>
-      <arg><option>--pidfile <replaceable>PIDFILE</replaceable></option></arg>
+      <group>
+        <arg><option>--noprogress</option></arg>
+        <arg><option>--quiet</option></arg>
+      </group>
+      <group>
+        <arg><option>--all</option></arg>
+        <arg rep='repeat'><replaceable>INDEX</replaceable></arg>
+      </group>
     </cmdsynopsis>
     <cmdsynopsis>
-      <command>searchd</command>
-      <arg choice='req'>--stop</arg>
+      <command>indexer</command>
+      <arg choice='req'>--merge <replaceable>MAIN_INDEX</replaceable> <replaceable>DELTA_INDEX</replaceable></arg>
       <arg><option>--config <replaceable>CONFIGFILE</replaceable></option></arg>
-      <arg><option>--pidfile <replaceable>PIDFILE</replaceable></option></arg>
+      <arg><option>--rotate</option></arg>
+      <group>
+        <arg><option>--noprogress</option></arg>
+        <arg><option>--quiet</option></arg>
+      </group>
     </cmdsynopsis>
+ 
   </refsynopsisdiv>
   <refsect1>
     <title>DESCRIPTION</title>
     <para>Sphinx is a collection of programs that aim to provide high 
-      quality fulltext search. <command>searchd</command> answers search
-      requests coming in on a socket.</para>
+      quality fulltext search. <command>indexer</command> fetches all
+      documents from the configured sources and creates the index data
+      files.</para>
 
     <para>This manual page was written for the &debian; distribution
       because the original program does not have a manual page.
@@ -110,21 +128,26 @@ manpage.1: manpage.sgml
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>--cpustats</option>
+        <term><option>--all</option>
         </term>
         <listitem>
-          <para>Provide per-query CPU stats in searchd log.</para>
+          <para>Causes <command>indexer</command> to (re-)index all indexes, instead of the specified ones.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>--iostats</option>
+        <term><option>--quiet</option>
         </term>
         <listitem>
-          <para>Provide per-query I/O stats in searchd log.</para>
+          <para>Suppress all non-error output.</para>
         </listitem>
       </varlistentry>
-
-
+      <varlistentry>
+        <term><option>--noprogress</option>
+        </term>
+        <listitem>
+          <para>Suppress progress information.</para>
+        </listitem>
+      </varlistentry>
       <varlistentry>
         <term><option>-h</option>
           <option>--help</option>
@@ -133,26 +156,11 @@ manpage.1: manpage.sgml
           <para>Show summary of options.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
-        <term><option>--pidfile</option>
+        <term><option>--rotate</option>
         </term>
         <listitem>
-          <para>Used with <option>--status</option> and <option>--stop</option> to find the correct searchd.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>--status</option>
-        </term>
-        <listitem>
-          <para>Print status variables of a running searchd.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>--stop</option>
-        </term>
-        <listitem>
-          <para>Send SIGTERM to a running searchd.</para>
+          <para>Writes index data files as INDEX.new files and sends a SIGHUP to searchd, causing it to rotate the index files.</para>
         </listitem>
       </varlistentry>
     </variablelist>
@@ -160,7 +168,7 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>SEE ALSO</title>
 
-    <para>indexer (1), search (1).</para>
+    <para>search (1), searchd (1).</para>
 
     <para>Sphinx and it's programs are documented fully by the <citetitle>Spinx reference manual</citetitle> available 
       in /usr/share/doc/sphinxsearch.</para>

@@ -48,6 +48,7 @@ build: configure-stamp build-stamp
 build-stamp:  configure-stamp
 	dh_testdir
 	$(MAKE)
+	docbook-to-man debian/indexer.1.sgml > indexer.1
 	docbook-to-man debian/searchd.1.sgml > searchd.1
 	touch $@
 
